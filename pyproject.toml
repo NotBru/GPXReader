@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "gpxreader"
+version = "0.1.0"
+description = ""
+authors = ["Bru Ronchi <brunom.ronchi@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pandas = "^1.5.3"
+numpy = "^1.24.2"
+matplotlib = "^3.7.0"
+beautifulsoup4 = "^4.11.2"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
