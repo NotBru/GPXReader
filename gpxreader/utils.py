@@ -9,7 +9,7 @@ mps_to_kmph = 3.6
 def with_derived_data(dataset: pd.DataFrame) -> pd.DataFrame:
     dataset = dataset.copy()
 
-    dataset["distance"] = dataset["horizontal_displacement"].sum()
+    dataset["distance"] = dataset["horizontal_displacement"].cumsum()
 
     dt = (dataset["datetime"].astype("int") / 10 ** 9).diff()
 

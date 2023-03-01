@@ -117,9 +117,12 @@ def process_wgs84(
     displacement = np.sqrt(dx ** 2 + dy ** 2 + dz ** 2)
 
     return {
+        "latitude": latitude,
+        "longitude": longitude,
+        "elevation": elevation,
         "datetime": prune(datetime, minlen),
         **r,
-        "horizontal_displacement": np.sqrt(np.max(displacement ** 2 - de ** 2, 0)),
+        "horizontal_displacement": np.sqrt(np.maximum(displacement ** 2 - de ** 2, 0)),
         "vertical_displacement": de,
         "displacement": displacement,
     }
