@@ -61,6 +61,7 @@ def process_wgs84(
     latitude: np.array | pd.Series,
     longitude: np.array | pd.Series,
     elevation: np.array | pd.Series | float | int,
+    datetime: np.array | pd.Series,
     smoothing: (int, int, int) = (0, 0, 0)
 ) -> dict[str, np.array | series]:
     """Obtain cartesian coordinates and displacements. Smoothing is performed
@@ -116,6 +117,7 @@ def process_wgs84(
     displacement = np.sqrt(dx ** 2 + dy ** 2 + dz ** 2)
 
     return {
+        "datetime": prune(datetime, minlen),
         **r,
         "horizontal_displacement": np.sqrt(np.max(displacement ** 2 - de ** 2, 0)),
         "vertical_displacement": de,
