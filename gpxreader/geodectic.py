@@ -78,20 +78,31 @@ def process_wgs84(
         Length of smoothing kernel for lat, lon, and elevation series.
     """
 
+    def prune(a: np.array | pd.Series, l: int):
+        if (ld := len(a) - l) == 0:
+            return a
+        min_, max_ = ld // 2, - ld // 2 # I hate that this is what works
+        if isinstance(a, np.ndarray):
+            return a[min_:max_]
+        return a.iloc[min_:max_]
+
     def smoothen(a: np.array | pd.Series, l: int):
         if l <= 1:
             return a
         x = np.linspace(-2, 2, l)
         ker = np.exp(-.5 * x ** 2)
         ker /= np.sum(ker)
-        convolution = np.convolve(a, ker, mode="same")
-        if isinstance(a, np.array):
+        convolution = np.convolve(a, ker, mode="valid")
+        if isinstance(a, np.ndarray):
             return convolution
+        a = prune(a, len(a) - l + 1)
         return pd.Series(convolution, index=a.index, name=a.name)
 
-    latitude = smoothen(latitude, smoothing[0])
-    longitude = smoothen(longitude, smoothing[1])
-    elevation = smoothen(elevation, smoothing[2])
+    minlen = len(latitude) - max(smoothing) + 1
+
+    latitude = prune(smoothen(latitude, smoothing[0]), minlen)
+    longitude = prune(smoothen(longitude, smoothing[1]), minlen)
+    elevation = prune(smoothen(elevation, smoothing[2]), minlen)
 
     r = wgs84_to_cartesian(latitude, longitude, elevation)
 
